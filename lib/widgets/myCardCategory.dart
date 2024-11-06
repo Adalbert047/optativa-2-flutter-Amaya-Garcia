@@ -25,11 +25,11 @@ class MyCardCategory extends StatelessWidget {
           Column(
             children: [
               Image(image: NetworkImage(this.categorie.urlImage),
-              height: 100.0),
+              height: 85.0),
               Text(this.categorie.name, 
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.bold
               )),
               SizedBox(height: 12),
@@ -37,7 +37,7 @@ class MyCardCategory extends StatelessWidget {
               onTap: () => Navigator.pushNamed(context, Routers.detaild_product, arguments: categorie),
               child: Text("Detalles", 
                      style: TextStyle(
-                       fontSize: 18,
+                       fontSize: 15,
                        color: Colors.blue,
                        decoration: TextDecoration.underline,
                        decorationColor: Colors.blue,
