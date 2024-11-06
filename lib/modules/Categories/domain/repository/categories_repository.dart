@@ -20,7 +20,7 @@ class CategoriesRepository implements Repository<dynamic, List<CategoriesRespons
       CategoriesResponse newItem = CategoriesResponse.fromJson(item);
       listCategoriesResponse.add(newItem);
     });
-    
+        
     return listCategoriesResponse;
   }
 }

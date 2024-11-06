@@ -37,7 +37,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 )),
                 leading: index % 2 == 0 ? Icon(Icons.edit_document, color: Colors.blue) : Icon(Icons.no_food_sharp, color: Colors.red) ,
                 trailing: index % 2 == 0 ? Icon(Icons.arrow_forward_ios, color: Colors.blue) : Icon(Icons.arrow_forward_ios_outlined, color: Colors.red),
-                onTap: () => Navigator.pushNamed(context, Routers.categorie),
+                onTap: () => Navigator.pushNamed(context, Routers.categorie, arguments: categories[index]),
               ), 
               separatorBuilder: (_, __) => Divider(), 
               itemCount: categories.length,
