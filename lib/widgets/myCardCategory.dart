@@ -1,11 +1,11 @@
+import 'package:examen_2do_parcial/modules/Categorie/domain/dto/categorie_response.dart';
+import 'package:examen_2do_parcial/router/router.dart';
 import 'package:flutter/material.dart';
 
 class MyCardCategory extends StatelessWidget {
+  final CategorieResponse categorie;
 
-  final String mytitleProduct;
-  final String myImage = "";
-
-  const MyCardCategory({Key? key, required this.mytitleProduct}) : super(key: key);
+  const MyCardCategory({Key? key,required this.categorie }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class MyCardCategory extends StatelessWidget {
             children: [
               Image(image: AssetImage('assets/LaptopMorada.png'),
               height: 125.0),
-              Text(this.mytitleProduct, 
+              Text(this.categorie.name, 
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
@@ -34,8 +34,7 @@ class MyCardCategory extends StatelessWidget {
               )),
               SizedBox(height: 12),
               GestureDetector(
-              onTap: () {
-              },
+              onTap: () => Navigator.pushNamed(context, Routers.detaild_product, arguments: categorie),
               child: Text("Detalles", 
                      style: TextStyle(
                        fontSize: 18,

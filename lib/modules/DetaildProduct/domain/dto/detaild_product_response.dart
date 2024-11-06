@@ -3,8 +3,8 @@ import 'dart:ffi';
 class DetaildProductResponse {
   String name;
   String description;
-  Double price;
-  Int stock;
+  double price;
+  int stock;
   String urlImage;
 
   DetaildProductResponse({
@@ -21,7 +21,7 @@ class DetaildProductResponse {
       description: json['description'],
       price: json['price'],
       stock: json['stock'],
-      urlImage: json['images'][1]
+      urlImage: json['images'][0]
     );
   }
 }

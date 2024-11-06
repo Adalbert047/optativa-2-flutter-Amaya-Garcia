@@ -45,7 +45,7 @@ class _CategorieScreenState extends State<CategorieScreen> {
         runSpacing: 10,
         children: categorieFuture.map((product) {
           return MyCardCategory(
-            mytitleProduct: product.name,
+            categorie: product,
           );
         }).toList(),
       ),
