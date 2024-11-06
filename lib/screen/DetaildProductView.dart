@@ -42,7 +42,7 @@ class _DetaildProductScreenState extends State<DetaildProductScreen> {
           child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image(image: AssetImage('assets/LaptopMorada.png'),
+            Image(image: NetworkImage(productResponse!.urlImage),
               height: 250.0),
             Text(productResponse!.name,
             style: TextStyle(

@@ -11,7 +11,7 @@ class MyCardCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 250,
-      height: 250,
+      height: 200,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -19,13 +19,13 @@ class MyCardCategory extends StatelessWidget {
             bottomRight: Radius.circular(15), 
             topLeft: Radius.circular(0), 
             topRight: Radius.circular(0))),
-        elevation: 1,
+        elevation: 2,
         color: Colors.white,
         child: 
           Column(
             children: [
-              Image(image: AssetImage('assets/LaptopMorada.png'),
-              height: 125.0),
+              Image(image: NetworkImage(this.categorie.urlImage),
+              height: 100.0),
               Text(this.categorie.name, 
               textAlign: TextAlign.center,
               style: TextStyle(

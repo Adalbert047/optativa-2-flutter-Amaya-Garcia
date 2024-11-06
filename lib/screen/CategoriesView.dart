@@ -10,40 +10,41 @@ class CategoriesScreen extends StatefulWidget {
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
-  late Future<List<CategoriesResponse>> categoriesFuture;
+  List<CategoriesResponse>? categoriesFuture;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    categoriesFuture = CategoriesUsecase().execute("");
+    fetchUseCase();
+  }
+
+  Future fetchUseCase () async {
+    categoriesFuture = await CategoriesUsecase().execute("");
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(mytitle:"Categorias"),
-      body: FutureBuilder(future: categoriesFuture, builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        }
-        else {
-          List<CategoriesResponse> categories = snapshot.data ?? [];
-            return ListView.separated(
-              itemBuilder: (context, index) => ListTile(
-                title: Text(categories[index].name.toUpperCase()),
-                subtitle: Text(categories[index].categorie,
-                style: TextStyle(
-                  color: Colors.grey
-                )),
-                leading: index % 2 == 0 ? Icon(Icons.edit_document, color: Colors.blue) : Icon(Icons.no_food_sharp, color: Colors.red) ,
-                trailing: index % 2 == 0 ? Icon(Icons.arrow_forward_ios, color: Colors.blue) : Icon(Icons.arrow_forward_ios_outlined, color: Colors.red),
-                onTap: () => Navigator.pushNamed(context, Routers.categorie, arguments: categories[index]),
-              ), 
-              separatorBuilder: (_, __) => Divider(), 
-              itemCount: categories.length,
-            );
-        }
-      }) 
-    );
+      body: isLoading ? 
+            Center(child: CircularProgressIndicator())
+            : ListView.separated(
+            itemBuilder: (context, index) => ListTile(
+              title: Text(categoriesFuture![index].name.toUpperCase()),
+              subtitle: Text(categoriesFuture![index].categorie,
+              style: TextStyle(
+                color: Colors.grey
+              )),
+              leading: index % 2 == 0 ? Icon(Icons.edit_document, color: Colors.blue) : Icon(Icons.no_food_sharp, color: Colors.red) ,
+              trailing: index % 2 == 0 ? Icon(Icons.arrow_forward_ios, color: Colors.blue) : Icon(Icons.arrow_forward_ios_outlined, color: Colors.red),
+              onTap: () => Navigator.pushNamed(context, Routers.categorie, arguments: categoriesFuture![index]),
+            ), 
+            separatorBuilder: (_, __) => Divider(), 
+            itemCount: categoriesFuture!.length,
+          ));
   }
 }

@@ -39,7 +39,9 @@ class _CategorieScreenState extends State<CategorieScreen> {
       body: isLoading ? 
       Center(child: CircularProgressIndicator()) :
       Padding(padding: EdgeInsets.only(left: 15, right: 15, top: 20),
-      child: Wrap(
+      child:
+      SingleChildScrollView(
+        child: Wrap(
         alignment: WrapAlignment.spaceBetween,
         spacing: 10, 
         runSpacing: 10,
@@ -48,8 +50,7 @@ class _CategorieScreenState extends State<CategorieScreen> {
             categorie: product,
           );
         }).toList(),
-      ),
-      )
+      )))
     );
   }
 }
