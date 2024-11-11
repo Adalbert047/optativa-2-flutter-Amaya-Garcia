@@ -5,6 +5,7 @@ import 'package:examen_2do_parcial/router/router.dart';
 import 'package:examen_2do_parcial/widgets/myAppBar.dart';
 import 'package:examen_2do_parcial/widgets/myCardCategory.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class DetaildProductScreen extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class DetaildProductScreen extends StatefulWidget {
 
 class _DetaildProductScreenState extends State<DetaildProductScreen> {
 
-
+  final TextEditingController controllerQuant = TextEditingController();
   DetaildProductResponse? productResponse;
   CategorieResponse? categorie;
   bool isLoading = true;
@@ -63,7 +64,22 @@ class _DetaildProductScreenState extends State<DetaildProductScreen> {
               ],
             ),
             SizedBox(height: 15),
-            ElevatedButton(onPressed: () {}, 
+            Padding(padding: EdgeInsets.only(left: 80, right: 80),
+            child: TextField(
+              decoration: new InputDecoration(labelText: "Escribe la cantidad de productos"),
+              controller: controllerQuant,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly
+              ],
+            )),
+            SizedBox(height: 15),
+            ElevatedButton(onPressed: () {
+
+              setState(() {
+                print(controllerQuant.text);
+              });
+            }, 
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
