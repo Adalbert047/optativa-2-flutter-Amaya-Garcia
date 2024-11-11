@@ -9,10 +9,10 @@ class CategorieUsecase implements UseCase<String, List<CategorieResponse>> {
   @override
   Future<List<CategorieResponse>> execute(String params) async {
 
-    final LocalStorage storage = LocalStorage('localstorage_app');
+    final LocalStorage storage = LocalStorage('local_CarritoTiendita');
 
-    if (!storage.getItem("token")) {
-      print("No tiene token");
+    if (storage.getItem("token") == null) {
+      throw Exception("No tienes el token");
     }
 
     final List<CategorieResponse> response = await CategorieRepository().execute(params);

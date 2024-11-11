@@ -1,5 +1,6 @@
 import 'package:examen_2do_parcial/modules/Categorie/domain/dto/categorie_response.dart';
 import 'package:examen_2do_parcial/modules/DetaildProduct/UseCase/detaild_product_useCase.dart';
+import 'package:examen_2do_parcial/modules/DetaildProduct/domain/dto/detaild_product.dart';
 import 'package:examen_2do_parcial/modules/DetaildProduct/domain/dto/detaild_product_response.dart';
 import 'package:examen_2do_parcial/router/router.dart';
 import 'package:examen_2do_parcial/widgets/myAppBar.dart';
@@ -16,8 +17,10 @@ class _DetaildProductScreenState extends State<DetaildProductScreen> {
 
   final TextEditingController controllerQuant = TextEditingController();
   DetaildProductResponse? productResponse;
+  final DetaildProductUsecase detaildProductUseCase = DetaildProductUsecase();
   CategorieResponse? categorie;
   bool isLoading = true;
+  bool isCorrect = true;
 
   @override
   void didChangeDependencies() {
@@ -27,10 +30,31 @@ class _DetaildProductScreenState extends State<DetaildProductScreen> {
   }
 
   Future fetchUseCase () async {
-    productResponse = await DetaildProductUsecase().execute(categorie!.id);
+    productResponse = await detaildProductUseCase.execute(categorie!.id);
     setState(() {
       isLoading = false;
     });
+  }
+
+  void addProduct () {
+    final productDetaild = DetaildProduct(
+      name: productResponse!.name, 
+      description: productResponse!.description, 
+      stockR: productResponse!.stock, 
+      price: productResponse!.price, 
+      date: DateTime.now().toString(), 
+      quant: int.tryParse(controllerQuant.text) ?? 0, 
+      total: (double.tryParse(controllerQuant.text) ?? 0) * productResponse!.price, 
+      urlImage: productResponse!.urlImage);
+
+    setState(() {
+      isCorrect = detaildProductUseCase.validationProduct(productDetaild);
+      if (!isCorrect) {
+        print("No puede manejar producots vacios o que superen el stock");
+      }
+    });
+
+    detaildProductUseCase.addProduct(productDetaild);
   }
 
   @override
@@ -74,12 +98,7 @@ class _DetaildProductScreenState extends State<DetaildProductScreen> {
               ],
             )),
             SizedBox(height: 15),
-            ElevatedButton(onPressed: () {
-
-              setState(() {
-                print(controllerQuant.text);
-              });
-            }, 
+            ElevatedButton(onPressed: addProduct, 
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -94,7 +113,11 @@ class _DetaildProductScreenState extends State<DetaildProductScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5)
                 )
-              ),)
+              ),),
+              SizedBox(height: 15),
+              ElevatedButton(onPressed: () {
+                Navigator.pushNamed(context, Routers.shopping);
+              } , child: Text("Carrito de Compras"))
           ],
         ),)
       );

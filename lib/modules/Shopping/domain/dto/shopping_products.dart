@@ -1,6 +1,4 @@
-import 'dart:ffi';
-
-class DetaildProduct {
+class ShoppingProducts {
   String name;
   String description;
   int stockR;
@@ -11,8 +9,7 @@ class DetaildProduct {
   String urlImage;
 
 
-
-  DetaildProduct({
+  ShoppingProducts({
     required this.name,
     required this.description,
     required this.stockR,
@@ -23,8 +20,8 @@ class DetaildProduct {
     required this.urlImage
   });
 
-    factory DetaildProduct.fromJson(Map<String, dynamic> json) {
-    return DetaildProduct(
+  factory ShoppingProducts.fromJson(Map<String, dynamic> json) {
+    return ShoppingProducts(
       name: json['name'],
       description: json['description'],
       price: json['price'],
@@ -35,15 +32,4 @@ class DetaildProduct {
       urlImage: json['urlImage']
     );
   }
-
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'description': description,
-        'stockR': stockR,
-        'price': price,
-        'date': date,
-        'quant': quant,
-        'total': total,
-        'urlImage': urlImage
-      };
 }

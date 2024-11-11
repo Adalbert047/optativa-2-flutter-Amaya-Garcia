@@ -10,7 +10,7 @@ class LoginUseCase implements UseCase<UserCredentials, UserLoginResponse> {
   @override
   Future<UserLoginResponse> execute(UserCredentials params) async {
     final UserCredentials credentials = UserCredentials(user: params.user,password: params.password);
-    final LocalStorage storage = LocalStorage('local_tiendita');
+    final LocalStorage storage = LocalStorage('local_CarritoTiendita');
 
 
     if (!validationUser(params)) {
@@ -19,7 +19,7 @@ class LoginUseCase implements UseCase<UserCredentials, UserLoginResponse> {
 
     final UserLoginResponse response = await LoginRepository().execute(credentials);
 
-    if (response.accesToken != "") {
+    if (response != null) {
       storage.setItem("token", response.accesToken);
     }
     

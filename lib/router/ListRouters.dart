@@ -3,6 +3,7 @@ import 'package:examen_2do_parcial/screen/CategorieView.dart';
 import 'package:examen_2do_parcial/screen/CategoriesView.dart';
 import 'package:examen_2do_parcial/screen/DetaildProductView.dart';
 import 'package:examen_2do_parcial/screen/LoginView.dart';
+import 'package:examen_2do_parcial/screen/ShoppingView.dart';
 import 'package:flutter/material.dart';
 import 'package:examen_2do_parcial/router/router.dart';
 
@@ -11,7 +12,8 @@ class ListRouters {
       Routers.login: (context) => Login(),
       Routers.categories: (context) => CategoriesScreen(),
       Routers.categorie: (context) => CategorieScreen(),
-      Routers.detaild_product: (context) => DetaildProductScreen()
+      Routers.detaild_product: (context) => DetaildProductScreen(),
+      Routers.shopping : (context) => ShoppingScreen()
       
   };
     static List<MenuOption> menuOption = [
