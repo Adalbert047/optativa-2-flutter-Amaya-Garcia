@@ -1,3 +1,6 @@
+import 'package:examen_2do_parcial/modules/Login/domain/dto/user_credentials.dart';
+import 'package:examen_2do_parcial/modules/Login/domain/dto/user_login_response.dart';
+import 'package:examen_2do_parcial/modules/Login/useCase/login_usecase.dart';
 import 'package:examen_2do_parcial/router/ListRouters.dart';
 import 'package:examen_2do_parcial/router/menu_option/menu_option.dart';
 import 'package:examen_2do_parcial/router/router.dart';
@@ -15,11 +18,47 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  final TextEditingController controllerUser = TextEditingController();
+  final TextEditingController controllerPassword = TextEditingController();
+  LoginUseCase? loginUseCase;
+  UserLoginResponse? userResponse;
+  bool isLoading = false;
+  bool isCorrect = true;
+
+
+  Future preLogin () async {
+    setState(() {
+      isLoading = true;
+      isCorrect = true;
+    });
+
+    final credentials = UserCredentials(user: controllerUser.text, password: controllerPassword.text);
+
+    try {
+      final response = await LoginUseCase().execute(credentials);
+
+      setState(() {
+        isLoading = false;
+        isCorrect = true;
+      });
+      Navigator.pushNamed(context, Routers.categories);
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+        isCorrect = false;
+      });
+      print("Error: $e");
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(mytitle:"Login"),
-      body: 
+      body: isLoading ? Center(child: CircularProgressIndicator()) :
       Center(
         child: Padding(padding: EdgeInsets.only(left: 25, right: 25),
           child: Column( 
@@ -32,14 +71,12 @@ class _LoginState extends State<Login> {
               child: Image(image: AssetImage('assets/LaptopMorada.png'),
               fit: BoxFit.cover,),
             ),
-            myTextField(placeholder: "Usuario", controller: null),
+            myTextField(placeholder: "Usuario", controller: controllerUser),
             SizedBox(height: 30),
-            myTextField(placeholder: "Contraseña", controller: null),
+            myTextField(placeholder: "Contraseña", controller: controllerPassword),
             Padding(padding: EdgeInsets.only(top: 30),
             child: ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, Routers.categories);
-              }, 
+              onPressed: preLogin, 
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
@@ -49,7 +86,10 @@ class _LoginState extends State<Login> {
                 )
               ),
               child: Text("Ingresar"))
-            ),  
+            ),
+            SizedBox(height: 30),
+            !isCorrect ? Text("Error, por favor, volverlo a intentar", style: TextStyle(fontSize: 15, color: Colors.red),) : Text("")
+              
           ],
         ),
       )

@@ -1,4 +1,5 @@
 class CategoriesResponse {
+  
   String categorie;
   String name;
   String url;

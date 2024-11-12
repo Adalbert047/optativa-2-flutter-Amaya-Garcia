@@ -34,7 +34,7 @@ class MyCardCategory extends StatelessWidget {
               )),
               SizedBox(height: 12),
               GestureDetector(
-              onTap: () => Navigator.pushNamed(context, Routers.detaild_product, arguments: categorie),
+              onTap: () => Navigator.pushNamed(context, Routers.detaild_product, arguments: categorie.id),
               child: Text("Detalles", 
                      style: TextStyle(
                        fontSize: 15,
