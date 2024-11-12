@@ -4,7 +4,6 @@ import 'package:examen_2do_parcial/modules/DetaildProduct/domain/dto/detaild_pro
 import 'package:examen_2do_parcial/modules/DetaildProduct/domain/dto/detaild_product_response.dart';
 import 'package:examen_2do_parcial/router/router.dart';
 import 'package:examen_2do_parcial/widgets/myAppBar.dart';
-import 'package:examen_2do_parcial/widgets/myCardCategory.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,18 +18,19 @@ class _DetaildProductScreenState extends State<DetaildProductScreen> {
   DetaildProductResponse? productResponse;
   final DetaildProductUsecase detaildProductUseCase = DetaildProductUsecase();
   CategorieResponse? categorie;
+  int id = 0;
   bool isLoading = true;
   bool isCorrect = true;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    categorie = ModalRoute.of(context)!.settings.arguments as CategorieResponse;
+    id = ModalRoute.of(context)!.settings.arguments as int;
     fetchUseCase();
   }
 
   Future fetchUseCase () async {
-    productResponse = await detaildProductUseCase.execute(categorie!.id);
+    productResponse = await detaildProductUseCase.execute(id);
     setState(() {
       isLoading = false;
     });
@@ -38,6 +38,7 @@ class _DetaildProductScreenState extends State<DetaildProductScreen> {
 
   void addProduct () {
     final productDetaild = DetaildProduct(
+      id: productResponse!.id,
       name: productResponse!.name, 
       description: productResponse!.description, 
       stockR: productResponse!.stock, 
@@ -47,14 +48,21 @@ class _DetaildProductScreenState extends State<DetaildProductScreen> {
       total: (double.tryParse(controllerQuant.text) ?? 0) * productResponse!.price, 
       urlImage: productResponse!.urlImage);
 
-    setState(() {
-      isCorrect = detaildProductUseCase.validationProduct(productDetaild);
-      if (!isCorrect) {
-        print("No puede manejar producots vacios o que superen el stock");
-      }
-    });
 
-    detaildProductUseCase.addProduct(productDetaild);
+    try {
+      setState(() {
+        isCorrect = detaildProductUseCase.validationProduct(productDetaild);
+      });
+    } catch (e) {
+      setState(() {
+        isCorrect = false;
+      });
+      print("Error: $e");
+    }
+
+    if (isCorrect) {
+      detaildProductUseCase.addProduct(productDetaild);
+    }
   }
 
   @override
@@ -117,7 +125,17 @@ class _DetaildProductScreenState extends State<DetaildProductScreen> {
               SizedBox(height: 15),
               ElevatedButton(onPressed: () {
                 Navigator.pushNamed(context, Routers.shopping);
-              } , child: Text("Carrito de Compras"))
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                fixedSize: Size(120, 40),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5)
+                )
+              ), 
+              child: Icon(Icons.store)),
+              isCorrect ? Text("") : Padding(padding: EdgeInsets.all(15), child: Text("No puedes tener una cantidad mayor al stock real y debe ser un valor mayor a 0", style: TextStyle(fontSize: 15, color: Colors.red), textAlign: TextAlign.center,)) 
           ],
         ),)
       );

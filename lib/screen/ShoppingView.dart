@@ -1,5 +1,6 @@
 import 'package:examen_2do_parcial/modules/Shopping/domain/dto/shopping_products.dart';
 import 'package:examen_2do_parcial/modules/Shopping/useCase/shopping_usecase.dart';
+import 'package:examen_2do_parcial/router/router.dart';
 import 'package:examen_2do_parcial/widgets/myAppBar.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ class ShoppingScreen extends StatefulWidget {
 }
 
 class _ShoppingState extends State<ShoppingScreen> { 
-
+  ShoppingUseCase useCaseShopping = ShoppingUseCase();
   List<ShoppingProducts> arrayProducts = ShoppingUseCase().ArrayProducts();
 
   @override
@@ -25,7 +26,14 @@ class _ShoppingState extends State<ShoppingScreen> {
               style: TextStyle(
                 color: Colors.grey
               )),
-              trailing: Icon(Icons.delete_outline_rounded), 
+              trailing: GestureDetector(
+              onTap: () { 
+                setState(() {
+                  useCaseShopping.deleteProduct(arrayProducts[index].name);
+                  arrayProducts = ShoppingUseCase().ArrayProducts();
+                });
+              },
+              child: Icon(Icons.delete_outline_rounded)), 
               leading: Image(image: NetworkImage(arrayProducts[index].urlImage),
               height: 100.0,
               width: 50.0,),

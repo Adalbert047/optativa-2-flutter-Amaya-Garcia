@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 class DetaildProduct {
+  int id;
   String name;
   String description;
   int stockR;
@@ -13,6 +14,7 @@ class DetaildProduct {
 
 
   DetaildProduct({
+    required this.id,
     required this.name,
     required this.description,
     required this.stockR,
@@ -25,6 +27,7 @@ class DetaildProduct {
 
     factory DetaildProduct.fromJson(Map<String, dynamic> json) {
     return DetaildProduct(
+      id : json['id'] ?? 0,
       name: json['name'],
       description: json['description'],
       price: json['price'],

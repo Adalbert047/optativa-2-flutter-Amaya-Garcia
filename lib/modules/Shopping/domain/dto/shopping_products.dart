@@ -32,4 +32,15 @@ class ShoppingProducts {
       urlImage: json['urlImage']
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'description': description,
+        'price': price,
+        'stockR': stockR,
+        'quant': quant,
+        'date': date,
+        'total': total,
+        'urlImage': urlImage
+  };
 }

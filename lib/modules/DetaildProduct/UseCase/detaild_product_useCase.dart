@@ -23,9 +23,19 @@ class DetaildProductUsecase implements UseCase<int, DetaildProductResponse> {
     final DetaildProductResponse response = await DetaildProductRepository().execute(params);
     return response;
   }
-    void addProduct(DetaildProduct product) {
-    List<dynamic> storedProducts = storage.getItem('productList');
+  void addProduct(DetaildProduct product) {
+    print("Producto ID en ADD PRODUCT ${product.id}");
+    List<dynamic>? storedProducts = storage.getItem('productList');
+
     List<DetaildProduct> productList = [];
+
+    if (storedProducts == null || storedProducts.isEmpty) {
+      product.total = product.quant * product.price;
+      productList.add(product);
+      storage.setItem('productList', productList.map((e) => jsonEncode(e.toJson())).toList());
+      print("Se agrega el primer producto al carrito: ${productList}");
+      return;
+    }
 
     storedProducts.forEach((item) {
       productList.add(DetaildProduct.fromJson(jsonDecode(item)));
@@ -34,26 +44,63 @@ class DetaildProductUsecase implements UseCase<int, DetaildProductResponse> {
     final existingProductIndex = productList.indexWhere((item) => item.name == product.name);
 
     if (existingProductIndex != -1) {
-     
       DetaildProduct existingProduct = productList[existingProductIndex];
       existingProduct.quant += product.quant;
       existingProduct.total = existingProduct.quant * existingProduct.price;
 
       print("Actualizo el total: ${existingProduct.total}");
       print("Actualizo el producto a ${existingProduct.quant} y el valor que agarre de quant es :${product.quant}");
-      
+
       productList[existingProductIndex] = existingProduct;
       print("El producto ya existía y se actualizó su cantidad en el carrito");
-
     } else {
-
       product.total = product.quant * product.price;
       productList.add(product);
     }
+
+
     storage.setItem('productList', productList.map((e) => jsonEncode(e.toJson())).toList());
 
-    print(jsonEncode(productList.map((e) => e.toJson()).toList()));
+    print("Lista de productos actualizada en LocalStorage: ${jsonEncode(productList.map((e) => e.toJson()).toList())}");
   }
+  
+  // void addProduct(DetaildProduct product) {
+
+  //   List<dynamic>? storedProducts = storage.getItem('productList');
+  //   List<DetaildProduct> productList = [];
+
+  //   if (storedProducts == null) {
+  //     storage.setItem('productList', jsonEncode([]));
+  //     storedProducts = [];
+  //   }
+  
+  //   storedProducts.forEach((item) {
+  //     productList.add(DetaildProduct.fromJson(jsonDecode(item)));
+  //   });
+
+  //   final existingProductIndex = productList.indexWhere((item) => item.name == product.name);
+
+  //   if (existingProductIndex != -1) {
+      
+  //     DetaildProduct existingProduct = productList[existingProductIndex];
+  //     existingProduct.quant += product.quant;
+  //     existingProduct.total = existingProduct.quant * existingProduct.price;
+
+  //     print("Actualizo el total: ${existingProduct.total}");
+  //     print("Actualizo el producto a ${existingProduct.quant} y el valor que agarre de quant es :${product.quant}");
+      
+  //     productList[existingProductIndex] = existingProduct;
+  //     print("El producto ya existía y se actualizó su cantidad en el carrito");
+  //   } 
+  //   else {
+
+  //     product.total = product.quant * product.price;
+  //     productList.add(product);
+  //   }
+  //   storage.setItem('productList', productList.map((e) => jsonEncode(e.toJson())).toList());
+
+  //   print(jsonEncode(productList.map((e) => e.toJson()).toList()));
+  // }
 
   // void addProduct (DetaildProduct product) { 
   //   if (product != null) {
@@ -86,13 +133,12 @@ class DetaildProductUsecase implements UseCase<int, DetaildProductResponse> {
   // }
 
   bool validationProduct (DetaildProduct product) {
+    print(product.quant);
     if (product.quant > product.stockR) {
-      print("Producto mayor al stock real");
-      return false;
+      throw Exception("No puedes tener un stock mayor al stock real");
     }
-    else if (product.quant < 0) {
-      print("Product menor a 0");
-      return false;
+    else if (!(product.quant > 0)) {
+      throw Exception("No puedes tener un stock mayor a 0");
     }
     return true;
   }
