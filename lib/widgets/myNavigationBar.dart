@@ -3,17 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:examen_2do_parcial/router/ListRouters.dart';
 
 class MyNavigationExample extends StatefulWidget {
-  const MyNavigationExample({super.key});
+  final int initialPageIndex;
+
+  const MyNavigationExample({super.key, this.initialPageIndex = 0});
 
   @override
   State<MyNavigationExample> createState() => _MyNavigationbarState();
 }
 
 class _MyNavigationbarState extends State<MyNavigationExample> {
+  late int currentPageIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    currentPageIndex = widget.initialPageIndex;
+  }
+
   @override
   Widget build(BuildContext context) {
-    int currentPageIndex = 0;
-
     return NavigationBar(
         onDestinationSelected: (int index) {
           setState(() {

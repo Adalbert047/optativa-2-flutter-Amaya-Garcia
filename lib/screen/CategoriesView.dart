@@ -31,7 +31,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: MyAppBar(mytitle: "Categorias"),
-        bottomNavigationBar: MyNavigationExample(),
+        bottomNavigationBar: MyNavigationExample(initialPageIndex: 0),
         body: isLoading
             ? Center(child: CircularProgressIndicator())
             : ListView.separated(

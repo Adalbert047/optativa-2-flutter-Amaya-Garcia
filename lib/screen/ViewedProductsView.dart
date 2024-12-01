@@ -1,4 +1,5 @@
 import 'package:examen_2do_parcial/widgets/myAppBar.dart';
+import 'package:examen_2do_parcial/widgets/myNavigationBar.dart';
 import 'package:flutter/material.dart';
 
 class ViewedProductsScreen extends StatefulWidget {
@@ -13,6 +14,7 @@ class _ViewedProductsState extends State<ViewedProductsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: MyAppBar(mytitle: "Productos Vistos"),
+        bottomNavigationBar: MyNavigationExample(initialPageIndex: 3),
         body: Text("Productos Visto"));
   }
 }

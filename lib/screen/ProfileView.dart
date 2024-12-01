@@ -1,4 +1,5 @@
 import 'package:examen_2do_parcial/widgets/myAppBar.dart';
+import 'package:examen_2do_parcial/widgets/myNavigationBar.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -12,6 +13,9 @@ class _ProfileState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBar(mytitle: "Perfil"), body: Text("Productos Visto"));
+      appBar: MyAppBar(mytitle: "Perfil"),
+      body: Text("Productos Visto"),
+      bottomNavigationBar: MyNavigationExample(initialPageIndex: 4),
+    );
   }
 }
