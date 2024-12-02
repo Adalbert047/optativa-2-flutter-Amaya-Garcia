@@ -1,11 +1,7 @@
-import 'package:examen_2do_parcial/modules/Categorie/domain/dto/categorie_response.dart';
-import 'package:examen_2do_parcial/modules/Categories/UseCase/categories_useCase.dart';
-import 'package:examen_2do_parcial/modules/Categories/domain/dto/categories_response.dart';
 import 'package:examen_2do_parcial/modules/ProductSearch/domain/dto/productSearch_Response.dart';
 import 'package:examen_2do_parcial/modules/ProductSearch/useCase/productSearch_useCase.dart';
 import 'package:examen_2do_parcial/router/router.dart';
 import 'package:examen_2do_parcial/widgets/myAppBar.dart';
-import 'package:examen_2do_parcial/widgets/myCardCategory.dart';
 import 'package:examen_2do_parcial/widgets/myNavigationBar.dart';
 import 'package:examen_2do_parcial/widgets/myTextField.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +75,9 @@ class _SearchProductsState extends State<SearchProductsScreen> {
                                 Icon(Icons.edit_document, color: Colors.blue),
                             trailing: Icon(Icons.arrow_forward_ios,
                                 color: Colors.blue),
-                            onTap: () => {},
+                            onTap: () => Navigator.pushNamed(
+                                context, Routers.detaild_product,
+                                arguments: productsSearchResponse[index].id),
                           ),
                           separatorBuilder: (_, __) => Divider(),
                           itemCount: productsSearchResponse.length,

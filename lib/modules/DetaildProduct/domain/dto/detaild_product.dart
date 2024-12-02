@@ -10,33 +10,32 @@ class DetaildProduct {
   double total;
   String date;
   String urlImage;
+  int countViewed;
 
+  DetaildProduct(
+      {required this.id,
+      required this.name,
+      required this.description,
+      required this.stockR,
+      required this.price,
+      required this.date,
+      required this.quant,
+      required this.total,
+      required this.countViewed,
+      required this.urlImage});
 
-
-  DetaildProduct({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.stockR,
-    required this.price,
-    required this.date,
-    required this.quant,
-    required this. total,
-    required this.urlImage
-  });
-
-    factory DetaildProduct.fromJson(Map<String, dynamic> json) {
+  factory DetaildProduct.fromJson(Map<String, dynamic> json) {
     return DetaildProduct(
-      id : json['id'] ?? 0,
-      name: json['name'],
-      description: json['description'],
-      price: json['price'],
-      stockR: json['stockR'],
-      quant: json['quant'],
-      date: json['date'],
-      total: json['total'],
-      urlImage: json['urlImage']
-    );
+        id: json['id'] ?? 0,
+        name: json['name'],
+        description: json['description'],
+        price: json['price'],
+        stockR: json['stockR'] ?? 0,
+        quant: json['quant'] ?? 0,
+        date: json['date'],
+        total: json['total'],
+        countViewed: json['countViewed'] ?? 0,
+        urlImage: json['urlImage']);
   }
 
   Map<String, dynamic> toJson() => {
@@ -47,6 +46,7 @@ class DetaildProduct {
         'date': date,
         'quant': quant,
         'total': total,
+        'countViewed': countViewed,
         'urlImage': urlImage
       };
 }

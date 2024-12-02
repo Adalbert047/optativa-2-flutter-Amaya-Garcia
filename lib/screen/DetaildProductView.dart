@@ -2,6 +2,7 @@ import 'package:examen_2do_parcial/modules/Categorie/domain/dto/categorie_respon
 import 'package:examen_2do_parcial/modules/DetaildProduct/UseCase/detaild_product_useCase.dart';
 import 'package:examen_2do_parcial/modules/DetaildProduct/domain/dto/detaild_product.dart';
 import 'package:examen_2do_parcial/modules/DetaildProduct/domain/dto/detaild_product_response.dart';
+import 'package:examen_2do_parcial/modules/DetaildProduct/domain/dto/detaild_product_viewed.dart';
 import 'package:examen_2do_parcial/router/router.dart';
 import 'package:examen_2do_parcial/widgets/myAppBar.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,6 @@ class DetaildProductScreen extends StatefulWidget {
 }
 
 class _DetaildProductScreenState extends State<DetaildProductScreen> {
-
   final TextEditingController controllerQuant = TextEditingController();
   DetaildProductResponse? productResponse;
   final DetaildProductUsecase detaildProductUseCase = DetaildProductUsecase();
@@ -29,26 +29,41 @@ class _DetaildProductScreenState extends State<DetaildProductScreen> {
     fetchUseCase();
   }
 
-  Future fetchUseCase () async {
+  Future fetchUseCase() async {
     productResponse = await detaildProductUseCase.execute(id);
+
+    print(productResponse!.reviews[0]["comment"]);
     setState(() {
       isLoading = false;
     });
+
+    final productDetaildViewed = DetaildProductViewed(
+        id: productResponse!.id,
+        name: productResponse!.name,
+        description: productResponse!.description,
+        price: productResponse!.price,
+        total: productResponse!.price,
+        urlImage: productResponse!.urlImage,
+        countViewed: 1);
+
+    detaildProductUseCase.addProductViewed(productDetaildViewed);
   }
 
-  void addProduct () {
+  void addProduct() {
     final productDetaild = DetaildProduct(
-      id: productResponse!.id,
-      name: productResponse!.name, 
-      description: productResponse!.description, 
-      stockR: productResponse!.stock, 
-      price: productResponse!.price, 
-      date: DateTime.now().toString(), 
-      quant: int.tryParse(controllerQuant.text) ?? 0, 
-      total: (double.tryParse(controllerQuant.text) ?? 0) * productResponse!.price, 
-      urlImage: productResponse!.urlImage);
+        id: productResponse!.id,
+        name: productResponse!.name,
+        description: productResponse!.description,
+        stockR: productResponse!.stock,
+        price: productResponse!.price,
+        countViewed: 0,
+        date: DateTime.now().toString(),
+        quant: int.tryParse(controllerQuant.text) ?? 0,
+        total: (double.tryParse(controllerQuant.text) ?? 0) *
+            productResponse!.price,
+        urlImage: productResponse!.urlImage);
 
-
+    print(productDetaild);
     try {
       setState(() {
         isCorrect = detaildProductUseCase.validationProduct(productDetaild);
@@ -66,78 +81,109 @@ class _DetaildProductScreenState extends State<DetaildProductScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {  
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(mytitle:"Detalle de product"),
-      body: isLoading ? 
-      Center(child: CircularProgressIndicator()) : 
-        Padding(padding: EdgeInsets.only(left: 15, right: 15, top: 70),
-          child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image(image: NetworkImage(productResponse!.urlImage),
-              height: 250.0),
-            Text(productResponse!.name,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold
-            )),
-            SizedBox(height: 20),
-            Text(productResponse!.description,
-            style: TextStyle(
-              fontSize: 14
-            )),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Price ${productResponse!.price.toString()}"),
-                Text("Stock ${productResponse!.stock.toString()}"),
-              ],
-            ),
-            SizedBox(height: 15),
-            Padding(padding: EdgeInsets.only(left: 80, right: 80),
-            child: TextField(
-              decoration: new InputDecoration(labelText: "Escribe la cantidad de productos"),
-              controller: controllerQuant,
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly
-              ],
-            )),
-            SizedBox(height: 15),
-            ElevatedButton(onPressed: addProduct, 
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Icon(Icons.hdr_plus_rounded, color: Colors.white),
-                Text("Añadir")
-              ],
-            ),
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-                fixedSize: Size(120, 40),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)
-                )
-              ),),
-              SizedBox(height: 15),
-              ElevatedButton(onPressed: () {
-                Navigator.pushNamed(context, Routers.shopping);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-                fixedSize: Size(120, 40),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)
-                )
-              ), 
-              child: Icon(Icons.store)),
-              isCorrect ? Text("") : Padding(padding: EdgeInsets.all(15), child: Text("No puedes tener una cantidad mayor al stock real y debe ser un valor mayor a 0", style: TextStyle(fontSize: 15, color: Colors.red), textAlign: TextAlign.center,)) 
-          ],
-        ),)
-      );
+        appBar: MyAppBar(mytitle: "Detalle de product"),
+        body: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Padding(
+                padding: EdgeInsets.only(left: 15, right: 15, top: 70),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image(
+                        image: NetworkImage(productResponse!.urlImage),
+                        height: 250.0),
+                    Text(productResponse!.name,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 20),
+                    Text(productResponse!.description,
+                        style: TextStyle(fontSize: 14)),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Price ${productResponse!.price.toString()}"),
+                        Text("Stock ${productResponse!.stock.toString()}"),
+                      ],
+                    ),
+                    SizedBox(height: 15),
+                    Padding(
+                        padding: EdgeInsets.only(left: 80, right: 80),
+                        child: TextField(
+                          decoration: new InputDecoration(
+                              labelText: "Escribe la cantidad de productos"),
+                          controller: controllerQuant,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                        )),
+                    SizedBox(height: 15),
+                    ElevatedButton(
+                      onPressed: addProduct,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Icon(Icons.hdr_plus_rounded, color: Colors.white),
+                          Text("Añadir")
+                        ],
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                          fixedSize: Size(120, 40),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5))),
+                    ),
+                    SizedBox(height: 15),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, Routers.shopping);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            fixedSize: Size(120, 40),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5))),
+                        child: Icon(Icons.store)),
+                    isCorrect
+                        ? Text("")
+                        : Padding(
+                            padding: EdgeInsets.all(15),
+                            child: Text(
+                              "No puedes tener una cantidad mayor al stock real y debe ser un valor mayor a 0",
+                              style: TextStyle(fontSize: 15, color: Colors.red),
+                              textAlign: TextAlign.center,
+                            )),
+                    SizedBox(height: 10),
+                    Text("Reviews",
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold)),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                        child: SizedBox(
+                            height: double.infinity,
+                            child: ListView.separated(
+                              itemBuilder: (context, index) => ListTile(
+                                  title: Text(
+                                      "R.${productResponse!.reviews[index]["rating"]} - ${productResponse!.reviews[index]["reviewerName"]} - ${productResponse!.reviews[index]["reviewerEmail"]}"
+                                          .toString()),
+                                  subtitle: Text(
+                                      "Comment: ${productResponse!.reviews[index]["comment"].toString()} - ${productResponse!.reviews[index]["date"].toString()}",
+                                      style: TextStyle(color: Colors.grey)),
+                                  trailing:
+                                      Icon(Icons.reviews, color: Colors.blue),
+                                  onTap: () => {}),
+                              separatorBuilder: (_, __) => Divider(),
+                              itemCount: productResponse!.reviews.length,
+                            )))
+                  ],
+                ),
+              ));
   }
 }
