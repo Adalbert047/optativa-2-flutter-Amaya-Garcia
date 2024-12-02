@@ -31,8 +31,6 @@ class _DetaildProductScreenState extends State<DetaildProductScreen> {
 
   Future fetchUseCase() async {
     productResponse = await detaildProductUseCase.execute(id);
-
-    print(productResponse!.reviews[0]["comment"]);
     setState(() {
       isLoading = false;
     });

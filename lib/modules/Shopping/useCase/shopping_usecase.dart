@@ -14,21 +14,20 @@ class ShoppingUseCase implements UseCase<ShoppingProducts, dynamic> {
   }
 
   List<ShoppingProducts> ArrayProducts() {
-    List<dynamic> storedProducts = storage.getItem('productList');
+    List<dynamic> storedProducts = storage.getItem('productList') ?? [];
     List<ShoppingProducts> shoppingsProducts = [];
-
-    print(storedProducts);
-
-    storedProducts.forEach((item) {
-      print(item);
-      shoppingsProducts.add(ShoppingProducts.fromJson(jsonDecode(item)));
-    });
+    if (storedProducts != null) {
+      storedProducts.forEach((item) {
+        print(item);
+        shoppingsProducts.add(ShoppingProducts.fromJson(jsonDecode(item)));
+      });
+    }
 
     return shoppingsProducts;
   }
 
   double TotalPrice() {
-    List<dynamic> storedProducts = storage.getItem('productList');
+    List<dynamic> storedProducts = storage.getItem('productList') ?? [];
     double priceTotal = 0;
 
     storedProducts.forEach((item) {

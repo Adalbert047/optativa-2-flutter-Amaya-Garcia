@@ -1,3 +1,4 @@
+import 'package:examen_2do_parcial/modules/DetaildProduct/domain/dto/detaild_product.dart';
 import 'package:examen_2do_parcial/modules/ProductsViewed/domain/dto/productsViewed_products.dart';
 import 'package:examen_2do_parcial/modules/ProductsViewed/useCase/productsViewed_useCase.dart';
 import 'package:examen_2do_parcial/widgets/myAppBar.dart';
@@ -12,9 +13,24 @@ class ViewedProductsScreen extends StatefulWidget {
 }
 
 class _ViewedProductsState extends State<ViewedProductsScreen> {
-  ProductsViewedUsecase useCaseShopping = ProductsViewedUsecase();
+  ProductsViewedUsecase useCaseProductViewed = ProductsViewedUsecase();
   List<ProductsViewedProducts> arrayProducts =
       ProductsViewedUsecase().ArrayProductsViewed();
+
+  void addProduct(ProductsViewedProducts product) {
+    final productDetaild = DetaildProduct(
+        id: product!.id,
+        name: product!.name,
+        description: product!.description,
+        stockR: 0,
+        price: product!.price,
+        countViewed: 0,
+        date: DateTime.now().toString(),
+        quant: 1,
+        total: 1 * product!.price,
+        urlImage: product!.urlImage);
+    useCaseProductViewed.addProduct(productDetaild);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +46,7 @@ class _ViewedProductsState extends State<ViewedProductsScreen> {
                 style: TextStyle(color: const Color.fromARGB(255, 78, 74, 74))),
             trailing: GestureDetector(
                 onTap: () {
-                  setState(() {});
+                  addProduct(arrayProducts[index]);
                 },
                 child: Icon(
                   Icons.shopping_basket_rounded,
